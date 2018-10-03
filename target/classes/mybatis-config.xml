@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration  
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+    <settings>  
+        <setting name="logImpl" value="LOG4J" />    
+        <setting name="lazyLoadingEnabled" value="true"/>
+    </settings>
+
+	<!-- 全局别名设置，在映射文件中只需写别名，而不必写出整个类路径 -->
+	<typeAliases>
+		<package name="com.huawei.model"></package>
+	</typeAliases>
+
+
+	<mappers>
+		<mapper resource="com/huawei/mapping/UserMapper.xml" />
+		<mapper resource="com/huawei/mapping/CategoryMapper.xml" />
+		<mapper resource="com/huawei/mapping/ArticleMapper.xml" />
+	</mappers>
+
+</configuration>

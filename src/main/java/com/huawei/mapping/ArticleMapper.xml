@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.dao.ArticleMapper">
+    <resultMap type="Article" id="articleMap" >
+        <id property="artId" column="ART_ID"></id>
+        <result property="artTitle" column="ART_TITLE"/>
+        <result property="artReledate" column="ART_RELEDATE"/>
+        <result property="artText" column="ART_TEXT"/>
+        <result property="artImg" column="ART_IMG"/>
+        <result property="artDisplay" column="ART_DISPLAY"/>
+        <association property="user" javaType="com.huawei.model.User" select="com.huawei.dao.UserMapper.queryById" column="USER_ID"></association>
+        <association property="catetory" javaType="Category" select="com.huawei.dao.CategoryMapper.findCategoryById" column="CATE_ID"></association>
+    </resultMap>
+
+    <!-- 查询所有Article -->  
+    <select id="queryAll" resultMap="articleMap" >  
+        select ART_ID,ART_TITLE,ART_RELEDATE,ART_TEXT,ART_IMG,USER_ID from ARTICLE 
+    </select>
+    
+    <select id="queryDisplay" parameterType="java.lang.Integer" resultMap="articleMap" >  
+        select ART_ID,ART_TITLE,ART_RELEDATE,ART_TEXT,ART_IMG,CATE_ID,USER_ID from ARTICLE 
+        where ART_DISPLAY = #{display}
+    </select>
+    
+    <select id="loadByPage" parameterType="Map" resultMap="articleMap" >  
+        select ART_ID,ART_TITLE,ART_RELEDATE,ART_TEXT,ART_IMG,USER_ID from ARTICLE 
+        where ART_DISPLAY = #{display}
+        <if test="start != null and size != null">
+            limit #{start} , #{size}
+        </if>
+    </select>
+    
+    <select id="queryArticleUser" parameterType="java.lang.Integer" resultMap="articleMap" >  
+        select ART_ID,ART_TITLE,ART_RELEDATE,ART_TEXT,ART_IMG,ART_DISPLAY,USER_ID,CATE_ID from ARTICLE 
+        where USER_ID = #{userId}
+    </select>
+    
+    <!-- 查询类别的文章Article -->  
+    <select id="queryByType" parameterType="java.lang.Integer" resultMap="articleMap" >  
+        select ART_ID,ART_TITLE,ART_RELEDATE,ART_TEXT,ART_IMG,USER_ID,CATE_ID from ARTICLE 
+        where CATE_ID = #{type} and ART_DISPLAY = 2;
+    </select>
+    
+    <!-- 根据文章的ID查询Article -->  
+    <select id="queryById" parameterType="java.lang.Integer" resultMap="articleMap" >  
+        select ART_ID,ART_TITLE,ART_RELEDATE,ART_TEXT,ART_IMG,USER_ID from ARTICLE 
+        where ART_ID = #{id}
+    </select>
+    
+    <insert id="saveArticle" parameterType="com.huawei.model.Article" keyProperty="artId" useGeneratedKeys="true">
+    		insert into ARTICLE (ART_TITLE,ART_RELEDATE,ART_TEXT,ART_IMG,ART_DISPLAY,USER_ID,CATE_ID) 
+    		values(#{artTitle},#{artReledate},#{artText},#{artImg},default,#{user.userId},#{catetory.cateId})
+    </insert>
+    
+    <update id="passArticle">
+        update ARTICLE set ART_DISPLAY = #{display} where ART_ID = #{artId} 
+    </update>
+    
+    <delete id="deleteArticleById" parameterType="java.lang.Integer">
+        delete from ARTICLE where ART_ID = #{artId}
+    </delete>
+    
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(*) from ARTICLE
+    </select>
+</mapper>

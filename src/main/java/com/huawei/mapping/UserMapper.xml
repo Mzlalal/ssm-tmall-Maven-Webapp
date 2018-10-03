@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.dao.UserMapper">
+
+<resultMap type="com.huawei.model.User" id="user">
+	<id column="USER_ID" property="userId"/>
+	<result column="USER_NAME" property="userName"/>
+	<result column="USER_PWD" property="userPwd"/>
+	<result column="USER_TYPE" property="userType" />
+</resultMap>
+
+    <select id="queryAll" resultMap="user" >  
+        select * from USERS 
+    </select>
+    
+    <select id="queryById" resultMap="user">
+        select USER_ID,USER_NAME,USER_PWD,USER_TYPE from USERS 
+        where USER_ID = #{id}
+    </select>
+    
+    <select id="queryByName" resultMap="user">
+        select USER_ID,USER_NAME,USER_PWD,USER_TYPE from USERS 
+        where USER_NAME = #{user_name} and USER_PWD = #{user_pwd}
+    </select>
+    
+    <insert id="saveUser" parameterType="com.huawei.model.User" keyProperty="userId" useGeneratedKeys="true">
+		insert into USERS(USER_NAME,USER_PWD,USER_TYPE)
+		values(#{userName},#{userPwd},#{userType})
+	</insert>
+	
+    <update id="updateUser" parameterType="com.huawei.model.User">
+    	update USERS set USER_NAME = #{userName},USER_PWD = #{userPwd},USER_TYPE = #{userType} where  USER_ID = #{userId} 
+    </update>
+    
+    <delete id="deleteUserById" parameterType="java.lang.Integer">
+    	delete from USERS where USER_ID = #{userId}
+    </delete>
+    
+    <select id="userLikeNameQuery" parameterType="java.lang.String" resultMap="user">
+    	select USER_ID,USER_NAME,USER_PWD,USER_TYPE from USERS 
+    	where USER_NAME like concat('%', #{userName} ,'%')
+    </select>    
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huawei.dao.CategoryMapper">
+
+    <resultMap type="com.huawei.model.Category" id="categoryMap">
+        <id property="cateId" column="CATE_ID"></id>
+        <result property="cateName" column="CATE_NAME"/>
+    </resultMap>
+
+    <select id="findAllCategory" resultMap="categoryMap" >  
+        select CATE_ID,CATE_NAME from CATEGORY 
+    </select>
+    
+    <select id="findCategoryById" resultMap="categoryMap" >  
+        select CATE_ID,CATE_NAME from CATEGORY 
+        where CATE_ID = #{id}
+    </select>
+    
+    <insert id="saveCategory" parameterType="com.huawei.model.Category" keyProperty="cateId" useGeneratedKeys="true">
+        insert into CATEGORY(CATE_NAME)
+        values(#{cateName})
+    </insert>
+    
+    <update id="updateCategory" parameterType="com.huawei.model.User">
+        update CATEGORY set 
+        CATE_NAME = #{cateName}
+        where CATE_ID = #{cateId}
+    </update>
+    
+    <delete id="deleteCategoryById" parameterType="java.lang.Integer">
+        delete from CATEGORY 
+        where CATE_ID = #{cateId}
+    </delete>
+    
+    <delete id="batchDeleteCategory" parameterType="int">
+        delete from CATEGORY 
+        where CATE_ID in
+        
+        <foreach item = "cateId" collection = "array" open="(" separator="," close = ")">
+            #{cateId}
+        </foreach>
+    </delete>
+    
+</mapper>
